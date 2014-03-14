@@ -44,9 +44,7 @@
                 that._handleSelectAll();
             }});
 			
-			
-			
-			var pager = that._grid.pager.bind("change", function(){
+			that._grid.pager.bind("change", function(){
 				that._pageChange();
 			});
         },
@@ -93,11 +91,11 @@
         _handleSelectAll: function () {
 			var checked = $(this._chkAllID).prop("checked");
 			var row = $(this._gridID + " table tbody tr");
-				if(checked){
-					this._selectRow(row);	
-				} else {
-					this._deselectRow(row);	
-				}
+			if(checked){
+				this._selectRow(row);	
+			} else {
+				this._deselectRow(row);	
+			}
         },
         _handleSelectMultiRow: function (rowSelector) {
             if($(rowSelector).hasClass("selectedRow")) {
