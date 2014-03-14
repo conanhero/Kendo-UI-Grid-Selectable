@@ -1,2 +1,2 @@
-JavaScipt
+Kendo-UI-Grid-Selectable
 =========
