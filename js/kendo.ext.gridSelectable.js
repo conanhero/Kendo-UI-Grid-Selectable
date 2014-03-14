@@ -33,10 +33,10 @@
             that._grid = $(element).kendoGrid(options.grid).data("kendoGrid");
             that._grid.thead.append(options.filterHeader);
             that._grid.bind("change", function (e) {
-                $(this._gridID + " .k-selectable " + this._chkClass + ":checked").prop("checked", true);
+                $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", true);
             });
 			
-            $(that._gridID + " .k-selectable tr").on({click: function(e) {
+            $(that._gridID + " table tbody tr").on({click: function(e) {
                 that._handleSingleClick(e);
             }});
             
@@ -44,11 +44,7 @@
                 that._handleSelectAll();
             }});
 			
-			$(that._gridID).on("keypress", "input.tbSearch", function(e) {
-				if (e.keyCode == 13) {
-					that._pageChange();
-				}
-			});
+			
 			
 			var pager = that._grid.pager.bind("change", function(){
 				that._pageChange();
@@ -59,25 +55,21 @@
             var row = $(checkBox).parent().parent();
             var checkedAll = $(this._chkAllID).prop("checked");
 			
-            if($(checkBox).is("input[type=checkbox]")) {                
+            if($(checkBox).is("input[type=checkbox]")) { 
                 if($(checkBox).prop("checked")) {
-                    $(this._gridID + " .k-selectable " + this._chkClass + ":checked").prop("checked", false);
+                    $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", false);
                     var selected = this._grid.select();
+					console.log(selected);
 					$(selected).find(this._chkClass).prop("checked", true);
-					
 					this._grid.select(selected);
-                } else {
+                } else {					
 					var count = $(this._selectedRow).size();
+					console.log(count);
 					if(count > 1){
-						if (checkedAll) {
-							$(this._chkAllID).prop("checked", false);
-							this._deselectRow(this._gridID + " table tbody tr");
-							$(checkBox).prop("checked", true);
-							this._grid.select(row);
-						} else {
-							$(this._gridID + " .k-selectable " + this._chkClass + ":checked").prop("checked", false);
-							$(checkBox).prop("checked", true);
-						}
+						$(this._gridID + " table " + this._chkClass + ":checked").prop("checked", false);
+						var selected = this._grid.select();
+						$(selected).find(this._chkClass).prop("checked", true);
+						this._grid.select(selected);
 					} else {
 						$(row).removeClass("k-state-selected").removeAttr("aria-selected");
 					}
@@ -87,10 +79,10 @@
                 this._grid.clearSelection();
                 if (checkedAll) {
                     $(this._chkAllID).prop("checked", false);
-                    this._deselectRow(this._gridID + " table tbody tr");
-                    $(this._gridID + " .k-selectable " + this._chkClass + ":checked").prop("checked", true);
+                    this._deselectRow(this._gridID + " tbody tr");
+                    $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", true);
                 } else {
-                    $(this._gridID + " .k-selectable " + this._chkClass + ":checked").prop("checked", false);
+                    $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", false);
                 }
                 
                 this._grid.select(selected);
@@ -101,14 +93,11 @@
         _handleSelectAll: function () {
 			var checked = $(this._chkAllID).prop("checked");
 			var row = $(this._gridID + " table tbody tr");
-			this._grid.clearSelection();
-			if(checked){
-				this._selectRow(row);
-				this._grid.select(row);
-			} else {
-				this._deselectRow(row);
-				this._grid.clearSelection();
-			}
+				if(checked){
+					this._selectRow(row);	
+				} else {
+					this._deselectRow(row);	
+				}
         },
         _handleSelectMultiRow: function (rowSelector) {
             if($(rowSelector).hasClass("selectedRow")) {
@@ -136,7 +125,7 @@
 		_pageChange: function () {
 			var that = this;
 			$(that._chkAllID).prop("checked", false);
-			$(that._gridID + " .k-selectable tr").on({click: function(e) {
+			$(that._gridID + " table tr").on({click: function(e) {
                 that._handleSingleClick(e);
             }});
 		},
