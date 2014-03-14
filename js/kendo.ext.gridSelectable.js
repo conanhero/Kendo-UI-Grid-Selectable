@@ -37,18 +37,12 @@
             that._grid.bind("change", function(e) {
                 $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", true);
             });
-
-            $(that._gridID + " table tbody tr").on({click : function(e) {
-                that._handleSingleClick(e);
-            }});
-
-            $(that._chkAllID).on({change : function(e) {
-                    that._handleSelectAll();
-            }});
-
+            
             that._grid.pager.bind("change", function() {
                 that._pageChange();
             });
+            
+            that._setupEvents();
         },
         _handleSingleClick : function(e) {
             var checkBox = e.target;
@@ -70,7 +64,15 @@
                         $(selected).find(this._chkClass).prop("checked", true);
                         this._grid.select(selected);
                     } else {
-                        $(row).removeClass("k-state-selected").removeAttr("aria-selected");
+                        if (checkedAll) {
+                            $(this._chkAllID).prop("checked", false);
+                            this._deselectRow(this._gridID + " table tbody tr");
+                            console.log(row);
+                            $(row).find(this._chkClass).prop("checked", true);
+                            this._grid.select(row);
+                        } else {
+                            $(row).removeClass("k-state-selected").removeAttr("aria-selected");
+                        }
                     }
                 }
             } else {
@@ -121,12 +123,20 @@
                 $(rowSelector).find(this._chkClass).prop("checked", false);
             }
         },
+        _setupEvents : function() {
+            var that = this;
+            $(that._gridID + " table tbody tr").on({click : function(e) {
+                that._handleSingleClick(e);
+            }});
+
+            $(that._chkAllID).on({change : function(e) {
+                    that._handleSelectAll();
+            }});
+        },
         _pageChange : function() {
             var that = this;
             $(that._chkAllID).prop("checked", false);
-            $(that._gridID + " table tr").on({click : function(e) {
-                that._handleSingleClick(e);
-            }});
+            that._setupEvents();
         },
         grid : function() {
             return this._grid;
