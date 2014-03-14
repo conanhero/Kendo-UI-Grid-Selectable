@@ -57,13 +57,22 @@
                     this._grid.select(selected);
                 } else {
                     var count = $(this._selectedRow).size();
+                    console.log(count);
                     if (count > 1) {
                         $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", false);
                         var selected = this._grid.select();
                         $(selected).find(this._chkClass).prop("checked", true);
                         this._grid.select(selected);
                     } else {
-                        $(row).removeClass("selectedRow").removeClass("k-state-selected").removeAttr("aria-selected");
+                        if (checkedAll) {
+                            $(this._chkAllID).prop("checked", false);
+                            this._deselectRow(this._gridID + " table tbody tr");
+                            console.log(row);
+                            $(row).find(this._chkClass).prop("checked", true);
+                            this._grid.select(row);
+                        } else {
+                            $(row).removeClass("k-state-selected").removeAttr("aria-selected");
+                        }
                     }
                 }
             } else {
