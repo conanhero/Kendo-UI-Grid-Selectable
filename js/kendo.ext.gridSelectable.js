@@ -57,12 +57,19 @@
                     this._grid.select(selected);
                 } else {
                     var count = $(this._selectedRow).size();
-                    console.log(count);
                     if (count > 1) {
-                        $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", false);
-                        var selected = this._grid.select();
-                        $(selected).find(this._chkClass).prop("checked", true);
-                        this._grid.select(selected);
+                        if (checkedAll) {
+                            $(this._chkAllID).prop("checked", false);
+                            var selected = this._grid.select();
+                            this._deselectRow(this._gridID + " table tbody tr");
+                            $(selected).find(this._chkClass).prop("checked", true);
+                            this._grid.select(selected);
+                        } else {
+                            $(this._gridID + " table " + this._chkClass + ":checked").prop("checked", false);
+                            var selected = this._grid.select();
+                            $(selected).find(this._chkClass).prop("checked", true);
+                            this._grid.select(selected);
+                        }
                     } else {
                         if (checkedAll) {
                             $(this._chkAllID).prop("checked", false);
@@ -94,6 +101,7 @@
         _handleSelectAll : function() {
             var checked = $(this._chkAllID).prop("checked");
             var row = $(this._gridID + " table tbody tr");
+            this._grid.clearSelection();
             if (checked) {
                 this._selectRow(row);
             } else {
